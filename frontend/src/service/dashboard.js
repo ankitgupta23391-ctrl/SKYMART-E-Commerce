@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:3000/api/dashboard";
+const API = "https://skymart-e-commerce.onrender.com/api/dashboard";
 
 // AUTH CONFIG
 const getAuthConfig = () => {

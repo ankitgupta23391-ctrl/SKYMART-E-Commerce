@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/product";
+const API_URL = "https://skymart-e-commerce.onrender.com/api/product";
 
 // SEARCH PRODUCTS
 

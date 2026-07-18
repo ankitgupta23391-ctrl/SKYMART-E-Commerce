@@ -402,10 +402,10 @@ export const googleCallback = async (req, res) => {
 
     // ✅ Redirect to Vite frontend
     res.redirect(
-      `http://localhost:5173/google-success?token=${token}&user=${encodedUser}`,
+      `https://skymart-07.netlify.app/google-success?token=${token}&user=${encodedUser}`,
     );
   } catch (error) {
-    res.redirect("http://localhost:5173/login");
+    res.redirect("https://skymart-07.netlify.app/login");
   }
 };
 

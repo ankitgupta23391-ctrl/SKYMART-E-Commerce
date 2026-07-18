@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:3000/api/payment";
+const API = "https://skymart-e-commerce.onrender.com/api/payment";
 
 export const createOrder = async (amount) => {
   const { data } = await axios.post(`${API}/create-order`, {

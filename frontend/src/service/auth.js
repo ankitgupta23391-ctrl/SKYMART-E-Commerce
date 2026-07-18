@@ -3,7 +3,7 @@ import axios from "axios";
 // Register
 export const register = async (data) => {
   const response = await axios.post(
-    "http://localhost:3000/api/auth/register",
+    "https://skymart-e-commerce.onrender.com/api/auth/register",
     data,
   );
   return response;
@@ -12,7 +12,7 @@ export const register = async (data) => {
 // Login
 export const login = async (data) => {
   const response = await axios.post(
-    "http://localhost:3000/api/auth/login",
+    "https://skymart-e-commerce.onrender.com/api/auth/login",
     data,
   );
   return response;
@@ -21,7 +21,7 @@ export const login = async (data) => {
 // Verify OTP
 export const verifyOTP = async (data) => {
   const response = await axios.post(
-    "http://localhost:3000/api/auth/verify-otp",
+    "https://skymart-e-commerce.onrender.com/api/auth/verify-otp",
     data,
   );
   return response;
@@ -30,7 +30,7 @@ export const verifyOTP = async (data) => {
 // Forgot Password
 export const forgotPassword = async (data) => {
   return await axios.post(
-    "http://localhost:3000/api/auth/forgot-password",
+    "https://skymart-e-commerce.onrender.com/api/auth/forgot-password",
     data,
   );
 };
@@ -38,7 +38,7 @@ export const forgotPassword = async (data) => {
 // Verify Forgot OTP
 export const verifyForgotOTP = async (data) => {
   return await axios.post(
-    "http://localhost:3000/api/auth/verify-forgot-otp",
+    "https://skymart-e-commerce.onrender.com/api/auth/verify-forgot-otp",
     data,
   );
 };
@@ -46,12 +46,12 @@ export const verifyForgotOTP = async (data) => {
 // Reset Password
 export const resetPassword = async (data) => {
   return await axios.post(
-    "http://localhost:3000/api/auth/reset-password",
+    "https://skymart-e-commerce.onrender.com/api/auth/reset-password",
     data,
   );
 };
 
 // Google Login
   export const googleLogin = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href = "https://skymart-e-commerce.onrender.com/api/auth/google";
   };
