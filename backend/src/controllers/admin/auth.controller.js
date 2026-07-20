@@ -5,67 +5,51 @@ import sendEmail from "../../utils/sendEmail.js";
 import generateToken from "../../utils/generateToken.js";
 import jwt from "jsonwebtoken";
 
-// Register
 export const register = async (req, res) => {
   try {
-    console.log("REGISTER API HIT");
 
     const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required",
-      });
-    }
-
-    console.log("Checking existing user...");
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
+      console.log("Step 3 - User already exists");
+
       return res.status(400).json({
         success: false,
         message: "Email already registered",
       });
     }
 
-    console.log("User does not exist");
-
     const hashedPassword = await bcrypt.hash(password, 10);
-    const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
-    console.log("Creating user...");
+    const otp = generateOTP();
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       otp,
-      otpExpiry,
+      otpExpiry: new Date(Date.now() + 10 * 60 * 1000),
     });
-
-    console.log("USER SAVED IN MONGODB ✅");
-
-    console.log("SENDING EMAIL START 📧");
 
     await sendEmail(
       email,
       "Verify Your Account",
-      `Your OTP is ${otp}. It will expire in 10 minutes.`,
+      `Your OTP is ${otp}`
     );
 
-    console.log("EMAIL SENT SUCCESSFULLY ✅");
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: "Registration successful. OTP sent to email.",
+      message: "Registration Successful",
     });
-  } catch (error) {
-    console.log("REGISTER ERROR ❌:", error);
 
-    res.status(500).json({
+  } catch (error) {
+    console.log("REGISTER ERROR ❌");
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

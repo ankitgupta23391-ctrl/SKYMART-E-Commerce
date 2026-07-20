@@ -1,13 +1,23 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config({ path: "./config.env" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const envPath = path.resolve(__dirname, "../../config.env");
+dotenv.config({ path: envPath });
+dotenv.config();
+
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log(
+  "EMAIL_PASS:",
+  process.env.EMAIL_PASS ? "Loaded ✅" : "Not Loaded ❌"
+);
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  family: 4, // Force IPv4
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -19,19 +29,16 @@ export default async function sendEmail(to, subject, text) {
     console.log("Sending email to:", to);
 
     const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: `"SkyMart" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,
     });
 
-    // console.log("EMAIL SENT SUCCESSFULLY ✅");
-    // console.log("Message ID:", info.messageId);
-
+    console.log("Email sent:", info.messageId);
     return info;
   } catch (error) {
-    console.log("EMAIL ERROR ❌");
-    console.log(error);
+    console.error("Email Error:", error);
     throw error;
   }
 }
