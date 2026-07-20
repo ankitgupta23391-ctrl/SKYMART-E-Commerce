@@ -16,16 +16,38 @@ console.log(
   process.env.EMAIL_PASS ? "Loaded ✅" : "Not Loaded ❌"
 );
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const getMailConfig = () => {
+  if (process.env.SENDGRID_API_KEY) {
+    return {
+      host: process.env.EMAIL_HOST || "smtp.sendgrid.net",
+      port: Number(process.env.EMAIL_PORT || 587),
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER || "apikey",
+        pass: process.env.SENDGRID_API_KEY,
+      },
+    };
+  }
+
+  return {
+    host: process.env.EMAIL_HOST || "smtp.gmail.com",
+    port: Number(process.env.EMAIL_PORT || 587),
+    secure: process.env.EMAIL_SECURE === "true",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  };
+};
+
+const transporter = nodemailer.createTransport(getMailConfig());
 
 export default async function sendEmail(to, subject, text) {
   try {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error("Email credentials are not configured. Set EMAIL_USER and EMAIL_PASS in Render/hosting environment variables.");
+    }
+
     console.log("Sending email to:", to);
 
     const info = await transporter.sendMail({
@@ -39,6 +61,8 @@ export default async function sendEmail(to, subject, text) {
     return info;
   } catch (error) {
     console.error("Email Error:", error);
-    throw error;
+    throw new Error(
+      error.message || "Failed to send OTP email. Check EMAIL_USER and EMAIL_PASS in the hosting environment."
+    );
   }
 }

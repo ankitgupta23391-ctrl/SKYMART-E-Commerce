@@ -33,17 +33,27 @@ export const register = async (req, res) => {
       otpExpiry: new Date(Date.now() + 10 * 60 * 1000),
     });
 
-    await sendEmail(
-      email,
-      "Verify Your Account",
-      `Your OTP is ${otp}`
-    );
+    try {
+      await sendEmail(
+        email,
+        "Verify Your Account",
+        `Your OTP is ${otp}`
+      );
 
+      return res.status(201).json({
+        success: true,
+        message: "Registration Successful",
+      });
+    } catch (emailError) {
+      await User.deleteOne({ _id: user._id });
 
-    return res.status(201).json({
-      success: true,
-      message: "Registration Successful",
-    });
+      console.error("OTP email send failed:", emailError.message);
+
+      return res.status(502).json({
+        success: false,
+        message: "Registration failed because the OTP email could not be sent. Please check the mail configuration on the server.",
+      });
+    }
 
   } catch (error) {
     console.log("REGISTER ERROR ❌");
